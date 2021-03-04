@@ -1,144 +1,79 @@
 ﻿using System.Collections.Generic;
 using System.Linq;
-using System.Threading;
-using System;
 
 namespace Game
 {
-    class Snake
+    class Snake : Queue<CellLocation>
     {
         private readonly GameBoard gameBoard;
+        private readonly int snakeInitialX;
+        private readonly int snakeInitialY;
+        public int InitialLength { get; }
 
-        private Queue<CellLocation> snakeBody;
-        private CellLocation feed;
         private CellLocation head;
 
-        private Direction direction;
-        private int speedMsPerMove;
-
-        private bool paused = false;
-
-        private Thread keepMovingThread;
-
-        private event Action SnakeLengthChanged;
-        private event Action SnakeDied;
-
-        public Snake(GameBoard gameBoard, int snakeInitialX, int snakeInitialY, int snakeInitialLength, Direction initialDirection, int speedMsPerMove, Action onSnakeLengthChanged, Action onSnakeDied)
+        public Snake(GameBoard gameBoard, int snakeInitialX, int snakeInitialY, int snakeInitialLength)
         {
             this.gameBoard = gameBoard;
-            this.speedMsPerMove = speedMsPerMove;
-
-            direction = initialDirection;
-            InitializeSnake(snakeInitialX, snakeInitialY, snakeInitialLength);
-            PlaceFeed();
-            
-            SnakeLengthChanged += onSnakeLengthChanged;
-            SnakeDied += onSnakeDied;
-
-            keepMovingThread = new Thread(new ThreadStart(KeepMoving)) { IsBackground = true };
+            this.snakeInitialX = snakeInitialX;
+            this.snakeInitialY = snakeInitialY;
+            InitialLength = snakeInitialLength;
         }
 
-        public Direction Direction
+        public new void Clear()
         {
-            set
-            {
-                // Snake can turn only its left or right
-                if ((value == Direction.Down || value == Direction.Up) && (direction == Direction.Left || direction == Direction.Right) ||
-                    (value == Direction.Left || value == Direction.Right) && (direction == Direction.Up || direction == Direction.Down))
-                {
-                    direction = value;
-                }
-            }
+            this.ToList().ForEach(cell => gameBoard[cell].Clear());
+            base.Clear();
         }
 
-        public int Length => snakeBody.Count;
-        public void Start() => keepMovingThread.Start();
-
-        public void Restart(int snakeInitialX, int snakeInitialY, int snakeInitialLength, Direction initialDirection)
-        {
-            snakeBody.ToList().ForEach(cell => gameBoard[cell].Remove());
-            gameBoard[feed].Remove();
-
-            direction = initialDirection;
-            InitializeSnake(snakeInitialX, snakeInitialY, snakeInitialLength);
-            PlaceFeed();
-
-            paused = false;
-        }
-
-        private void KeepMoving()
-        {
-            while (true)
-            {
-                if (!paused)
-                {
-                    var newHeadLocation = gameBoard.GetNeigborLocation(head, direction);
-                    if (snakeBody.Contains(newHeadLocation))
-                    {
-                        // Snake is dead.
-                        SnakeDied?.Invoke();
-                        paused = true;
-                    }
-
-                    MoveHead(newHeadLocation);
-
-                    if (feed.Equals(newHeadLocation))
-                    {
-                        // Snake ate feed.
-                        PlaceFeed();
-                        SnakeLengthChanged?.Invoke();
-                    }
-                    else
-                    {
-                        // Snake didn't eat feed.
-                        RemoveTail();
-                    }
-                }
-                Thread.Sleep(speedMsPerMove);
-            }
-        }
-
-        private void InitializeSnake(int snakeInitialX, int snakeInitialY, int snakeLength)
-        {
-            snakeBody = new Queue<CellLocation>();
-            var cell = new CellLocation(snakeInitialX, snakeInitialY);
-
-            for (int i = 0; i < snakeLength - 1; i++)
-            {
-                snakeBody.Enqueue(cell);
-                cell = gameBoard.GetNeigborLocation(cell, direction);
-            }
-
-            head = cell;
-            snakeBody.Enqueue(head);
-            SnakeLengthChanged?.Invoke();
-
-            // Show snake on board game.
-            snakeBody.ToList().ForEach(cell => gameBoard[cell].PlaceSnake());
-        }
-
-        private void MoveHead(CellLocation newHeadLocation)
+        public new void Enqueue(CellLocation newHeadLocation)
         {
             head = newHeadLocation;
-            snakeBody.Enqueue(head);
+            base.Enqueue(head);
             gameBoard[head].PlaceSnake();
         }
 
-        private void RemoveTail()
+        public new CellLocation Dequeue()
         {
-            var tail = snakeBody.Dequeue();
-            gameBoard[tail].Remove();
+            var tail = base.Dequeue();
+            gameBoard[tail].Clear();
+            return tail;
         }
 
-        private void PlaceFeed()
+        public void Initialize(Direction direction)
         {
-            do
+            Clear();
+
+            Enqueue(new CellLocation(snakeInitialX, snakeInitialY));
+            for (int i = 1; i < InitialLength; i++)
             {
-                feed = gameBoard.GetCellLocationRandomly();
-            } while (snakeBody.Contains(feed));
-
-            gameBoard[feed].PlaceFeed();
+                Enqueue(NextHeadLocation(direction));
+            }
         }
+
+        public CellLocation NextHeadLocation(Direction direction)
+        {
+            var x = head.X;
+            var y = head.Y;
+
+            switch (direction)
+            {
+                case Direction.Left:
+                    x = SumModulo(x, -1, gameBoard.ColumnCount);
+                    break;
+                case Direction.Right:
+                    x = SumModulo(x, 1, gameBoard.ColumnCount);
+                    break;
+                case Direction.Up:
+                    y = SumModulo(y, -1, gameBoard.RowCount);
+                    break;
+                case Direction.Down:
+                    y = SumModulo(y, 1, gameBoard.RowCount);
+                    break;
+            }
+            return new CellLocation(x, y);
+        }
+
+        private int SumModulo(int a, int b, int modulo) => (a + b + modulo) % modulo;
     }
 }
-

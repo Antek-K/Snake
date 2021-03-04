@@ -1,30 +1,29 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 
 namespace Game
 {
     class GameBoard
     {
         private readonly Cell[][] board;
-        private readonly Random random = new Random();
-        private readonly int columnCount;
-        private readonly int rowCount;
 
         public GameBoard(int x, int y)
         {
-            columnCount = x;
-            rowCount = y;
+            ColumnCount = x;
+            RowCount = y;
 
-            board = new Cell[x][];
-            for (int i = 0; i < x; i++)
+            board = new Cell[ColumnCount][];
+            for (int i = 0; i < ColumnCount; i++)
             {
-                board[i] = new Cell[y];
-                for (int j = 0; j < y; j++)
+                board[i] = new Cell[RowCount];
+                for (int j = 0; j < RowCount; j++)
                 {
                     board[i][j] = new Cell();
                 }
             }
         }
+
+        public int RowCount { get; }
+        public int ColumnCount { get; }
 
         public Cell this[CellLocation cellLocation] => board[cellLocation.X][cellLocation.Y];
 
@@ -32,41 +31,14 @@ namespace Game
         {
             var flatBoard = new List<Cell>();
 
-            for (int j = 0; j < rowCount; j++)
+            for (int j = 0; j < RowCount; j++)
             {
-                for (int i = 0; i < columnCount; i++)
+                for (int i = 0; i < ColumnCount; i++)
                 {
                     flatBoard.Add(board[i][j]);
                 }
             }
             return flatBoard.ToArray();
         }
-
-        public CellLocation GetCellLocationRandomly() => new CellLocation(random.Next(0, columnCount), random.Next(0, rowCount));
-
-        public CellLocation GetNeigborLocation(CellLocation originalLocation, Direction direction)
-        {
-            var x = originalLocation.X;
-            var y = originalLocation.Y;
-
-            switch (direction)
-            {
-                case Direction.Left:
-                    x = SumModulo(x, -1, columnCount);
-                    break;
-                case Direction.Right:
-                    x = SumModulo(x, 1, columnCount);
-                    break;
-                case Direction.Up:
-                    y = SumModulo(y, -1, rowCount);
-                    break;
-                case Direction.Down:
-                    y = SumModulo(y, 1, rowCount);
-                    break;
-            }
-            return new CellLocation(x, y);
-        }
-
-        private int SumModulo(int a, int b, int modulo) => (a + b + modulo) % modulo;
     }
 }

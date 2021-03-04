@@ -27,7 +27,7 @@ namespace Game
 
         public void PlaceSnake() => Shape = snake;
         public void PlaceFeed() => Shape = feed;
-        public void Remove() => Shape = null;
+        public void Clear() => Shape = null;
 
         private void NotifyPropertyChanged([CallerMemberName] string propertyName = "")
         {

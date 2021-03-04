@@ -2,8 +2,6 @@
 {
     class Parameters
     {
-        public const int CellSize = 20;
-
         public const int ColumnCount = 20;
         public const int RowCount = 20;
 

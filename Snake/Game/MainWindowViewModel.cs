@@ -1,67 +1,34 @@
 ﻿using GalaSoft.MvvmLight.Command;
 using System.Collections.ObjectModel;
-using System.ComponentModel;
-using System.Runtime.CompilerServices;
-using System.Windows;
 using System.Windows.Input;
 
 namespace Game
 {
-    class MainWindowViewModel : INotifyPropertyChanged
+    class MainWindowViewModel
     {
-        private readonly GameBoard gameBoard;
-        private readonly Snake snake;
-        private Visibility gameOverSubwindowVisibility = Visibility.Visible;
-
-        public event PropertyChangedEventHandler PropertyChanged;
+        private readonly DirectionManager directionManager;
 
         public MainWindowViewModel()
         {
-            gameBoard = new GameBoard(Parameters.ColumnCount, Parameters.RowCount);
-            snake = new Snake(gameBoard, Parameters.SnakeInitialX, Parameters.SnakeInitialY, Parameters.SnakeInitialLength, Parameters.InitialDirection, Parameters.SpeedMsPerMove, Snake_SnakeLengthChanged, Snake_SnakeDied);
+            var gameBoard = new GameBoard(Parameters.ColumnCount, Parameters.RowCount);
+            var snake = new Snake(gameBoard, Parameters.SnakeInitialX, Parameters.SnakeInitialY, Parameters.SnakeInitialLength);
+            var feed = new Feed(gameBoard);
+            directionManager = new DirectionManager(Parameters.InitialDirection);
+            GameLogic = new GameLogic(snake, feed, directionManager, Parameters.SpeedMsPerMove, Parameters.ScoreFactor);
+
+            FlatBoard = new ObservableCollection<Cell>(gameBoard.FlatBoard());
+            ColumnCount = gameBoard.ColumnCount;
+            RowCount = gameBoard.RowCount;
         }
+        public GameLogic GameLogic { get; }
+        public ObservableCollection<Cell> FlatBoard { get; }
+        public int ColumnCount { get; }
+        public int RowCount { get; }
 
-        public ObservableCollection<Cell> GameBoard => new ObservableCollection<Cell>(gameBoard.FlatBoard());
-
-        public int ColumnCount => Parameters.ColumnCount;
-        public int RowCount => Parameters.RowCount;
-        public double GameBoardWidth => Parameters.ColumnCount * Parameters.CellSize;
-        public double GameBoardHeight => Parameters.RowCount * Parameters.CellSize;
-
-        public int Score => (snake.Length - Parameters.SnakeInitialLength) * Parameters.ScoreFactor;
-
-        public Visibility GameOverSubwindowVisibility
-        {
-            get => gameOverSubwindowVisibility;
-            set
-            {
-                gameOverSubwindowVisibility = value;
-                NotifyPropertyChanged();
-            }
-        }
-
-        public ICommand StartCommand => new RelayCommand(Start);
-        public ICommand ReplayCommand => new RelayCommand(Restart, () => GameOverSubwindowVisibility == Visibility.Visible);
-
-        public ICommand GoLeftCommand => new RelayCommand(() => snake.Direction = Direction.Left);
-        public ICommand GoDownCommand => new RelayCommand(() => snake.Direction = Direction.Down);
-        public ICommand GoRightCommand => new RelayCommand(() => snake.Direction = Direction.Right);
-        public ICommand GoUpCommand => new RelayCommand(() => snake.Direction = Direction.Up);
-
-        private void Snake_SnakeLengthChanged() => NotifyPropertyChanged(nameof(Score));
-        private void Snake_SnakeDied() => GameOverSubwindowVisibility = Visibility.Visible;
-
-        private void Start()
-        {
-            snake.Start();
-            GameOverSubwindowVisibility = Visibility.Hidden;
-        }
-
-        private void Restart()
-        {
-            snake.Restart(Parameters.SnakeInitialX, Parameters.SnakeInitialY, Parameters.SnakeInitialLength, Parameters.InitialDirection);
-            GameOverSubwindowVisibility = Visibility.Hidden;
-        }
-        private void NotifyPropertyChanged([CallerMemberName] string propertyName = "") => PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
+        public ICommand StartCommand => new RelayCommand(GameLogic.Start, () => GameLogic.IsDead);
+        public ICommand GoLeftCommand => new RelayCommand(() => directionManager.Enqueue(Direction.Left));
+        public ICommand GoDownCommand => new RelayCommand(() => directionManager.Enqueue(Direction.Down));
+        public ICommand GoRightCommand => new RelayCommand(() => directionManager.Enqueue(Direction.Right));
+        public ICommand GoUpCommand => new RelayCommand(() => directionManager.Enqueue(Direction.Up));
     }
 }
