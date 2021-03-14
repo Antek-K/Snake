@@ -1,0 +1,60 @@
+﻿<Window x:Class="Game.MainWindow" xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:behaviors="http://schemas.microsoft.com/xaml/behaviors" xmlns:local="clr-namespace:Game" Title="Snake"
+        ResizeMode="CanMinimize" KeyboardNavigation.ControlTabNavigation="None" SizeToContent="WidthAndHeight">
+
+    <Window.DataContext>
+        <local:MainWindowViewModel />
+    </Window.DataContext>
+
+    <Window.InputBindings>
+        <KeyBinding Key="Enter" Command="{Binding StartCommand}" />
+        <KeyBinding Key="Left" Command="{Binding GoLeftCommand}" />
+        <KeyBinding Key="Down" Command="{Binding GoDownCommand}" />
+        <KeyBinding Key="Right" Command="{Binding GoRightCommand}" />
+        <KeyBinding Key="Up" Command="{Binding GoUpCommand}" />
+    </Window.InputBindings>
+
+    <behaviors:Interaction.Triggers>
+        <behaviors:EventTrigger EventName="Loaded">
+            <behaviors:InvokeCommandAction Command="{Binding StartCommand}" />
+        </behaviors:EventTrigger>
+    </behaviors:Interaction.Triggers>
+
+    <StackPanel>
+        <Grid>
+            <Border
+                    Height="{Binding RowCount, Converter={StaticResource MultiplicationConverter}, ConverterParameter={StaticResource CellSize}}"
+                    Width="{Binding ColumnCount, Converter={StaticResource MultiplicationConverter}, ConverterParameter={StaticResource CellSize}}">
+                <ItemsControl ItemsSource="{Binding FlatBoard}">
+                    <ItemsControl.ItemTemplate>
+                        <DataTemplate>
+                            <ContentPresenter Content="{Binding Shape}" />
+                        </DataTemplate>
+                    </ItemsControl.ItemTemplate>
+                    <ItemsControl.ItemsPanel>
+                        <ItemsPanelTemplate>
+                            <UniformGrid Columns="{Binding ColumnCount}" Rows="{Binding RowCount}" />
+                        </ItemsPanelTemplate>
+                    </ItemsControl.ItemsPanel>
+                </ItemsControl>
+            </Border>
+
+            <Border Style="{StaticResource MessageBoxBorder}"
+                    Visibility="{Binding GameLogic.IsDead, Converter={StaticResource BooleanToVisibilityConverter}}">
+                <StackPanel>
+                    <TextBlock>Game over</TextBlock>
+                    <TextBlock Text="{Binding GameLogic.Score, StringFormat='Score: {0}'}" />
+                    <Button Command="{Binding StartCommand}">Play again</Button>
+                    <TextBlock>or click enter</TextBlock>
+                </StackPanel>
+            </Border>
+        </Grid>
+
+        <Label>
+            <Label.Content>
+                <TextBlock Text="{Binding GameLogic.Score, StringFormat='Score: {0}'}" />
+            </Label.Content>
+        </Label>
+    </StackPanel>
+</Window>
