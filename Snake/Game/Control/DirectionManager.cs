@@ -2,7 +2,7 @@
 
 namespace Game
 {
-    class DirectionManager : Queue<Direction>
+    public class DirectionManager : Queue<Direction>
     {
         private readonly Direction initialDirection;
 
@@ -10,13 +10,6 @@ namespace Game
         {
             this.initialDirection = initialDirection;
         }
-
-
-        // Snake can turn only its left or right
-        private bool IsDirectionAcceptable(Direction previousDirection, Direction direction) =>
-            (direction == Direction.Down || direction == Direction.Up) && (previousDirection == Direction.Left || previousDirection == Direction.Right) ||
-            (direction == Direction.Left || direction == Direction.Right) && (previousDirection == Direction.Up || previousDirection == Direction.Down);
-
 
         public new Direction Dequeue()
         {
@@ -37,11 +30,16 @@ namespace Game
             return Peek();
         }
 
-        internal void Initialize()
+        public void Initialize()
         {
             Clear();
             Enqueue(initialDirection);
         }
+
+        // Snake can turn only its left or right
+        private bool IsDirectionAcceptable(Direction previousDirection, Direction direction) =>
+            (direction == Direction.Down || direction == Direction.Up) && (previousDirection == Direction.Left || previousDirection == Direction.Right) ||
+            (direction == Direction.Left || direction == Direction.Right) && (previousDirection == Direction.Up || previousDirection == Direction.Down);
     }
 
 }
