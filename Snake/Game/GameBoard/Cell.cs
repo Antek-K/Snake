@@ -1,6 +1,5 @@
 ﻿using System.ComponentModel;
 using System.Runtime.CompilerServices;
-using System.Windows;
 using System.Windows.Media;
 using System.Windows.Shapes;
 
@@ -14,11 +13,12 @@ namespace Game
         private Shape shape;
 
         public event PropertyChangedEventHandler PropertyChanged;
+        public static IDispatcher Dispatcher { get; set; } = new Dispatcher();
 
         public Shape Shape
         {
             get => shape;
-            set
+            private set
             {
                 shape = value;
                 NotifyPropertyChanged();
@@ -33,7 +33,7 @@ namespace Game
         {
             if (PropertyChanged != null)
             {
-                Application.Current?.Dispatcher?.Invoke(PropertyChanged, this, new PropertyChangedEventArgs(propertyName));
+                Dispatcher?.Invoke(PropertyChanged, this, new PropertyChangedEventArgs(propertyName));
             }
         }
     }
