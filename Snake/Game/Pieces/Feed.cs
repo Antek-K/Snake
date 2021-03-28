@@ -5,7 +5,7 @@ namespace Game
     class Feed : CellLocation
     {
         private readonly GameBoard gameBoard;
-        private readonly Random random = new Random();
+        private readonly Random random = new();
 
         public Feed(GameBoard gameBoard)
         {

@@ -41,10 +41,10 @@
             </Border>
 
             <Border Style="{StaticResource MessageBoxBorder}"
-                    Visibility="{Binding GameLogic.IsDead, Converter={StaticResource BooleanToVisibilityConverter}}">
+                    Visibility="{Binding SnakeState.IsDead, Converter={StaticResource BooleanToVisibilityConverter}}">
                 <StackPanel>
                     <TextBlock>Game over</TextBlock>
-                    <TextBlock Text="{Binding GameLogic.Score, StringFormat='Score: {0}'}" />
+                    <TextBlock Text="{Binding SnakeState.Score, StringFormat='Score: {0}'}" />
                     <Button Command="{Binding StartCommand}">Play again</Button>
                     <TextBlock>or click enter</TextBlock>
                 </StackPanel>
@@ -53,7 +53,7 @@
 
         <Label>
             <Label.Content>
-                <TextBlock Text="{Binding GameLogic.Score, StringFormat='Score: {0}'}" />
+                <TextBlock Text="{Binding SnakeState.Score, StringFormat='Score: {0}'}" />
             </Label.Content>
         </Label>
     </StackPanel>

@@ -1,47 +1,29 @@
-﻿using System.ComponentModel;
-using System.Runtime.CompilerServices;
-using System.Threading;
+﻿using System.Threading;
 using System.Threading.Tasks;
 
 namespace Game
 {
-    class GameLogic : INotifyPropertyChanged
+    class GameLogic
     {
         private readonly Snake snake;
         private readonly Feed feed;
         private readonly DirectionManager directionManager;
+        private readonly SnakeState snakeState;
 
         private readonly int speedMsPerMove;
-        private readonly int scoreFactor;
 
-        private bool isDead;
-
-        public event PropertyChangedEventHandler PropertyChanged;
-
-        public GameLogic(Snake snake, Feed feed, DirectionManager directionManager, int speedMsPerMove, int scoreFactor)
+        public GameLogic(Snake snake, Feed feed, DirectionManager directionManager, SnakeState snakeState, int speedMsPerMove)
         {
             this.snake = snake;
             this.feed = feed;
             this.directionManager = directionManager;
+            this.snakeState = snakeState;
 
             this.speedMsPerMove = speedMsPerMove;
-            this.scoreFactor = scoreFactor;
 
-            IsDead = true;
+            snakeState.IsDead = true;
 
             Task.Run(() => KeepMoving());
-        }
-
-        public object Score => (snake.Count - snake.InitialLength) * scoreFactor;
-
-        public bool IsDead
-        {
-            get => isDead;
-            private set
-            {
-                isDead = value;
-                NotifyPropertyChanged();
-            }
         }
 
         public void Start()
@@ -50,24 +32,24 @@ namespace Game
 
             directionManager.Initialize();
             snake.Initialize(directionManager.Dequeue());
-            NotifyPropertyChanged(nameof(Score));
+            snakeState.ScoreValueChanged();
             PlaceFeed();
 
-            IsDead = false;
+            snakeState.IsDead = false;
         }
 
         private void KeepMoving()
         {
             while (true)
             {
-                if (!IsDead)
+                if (!snakeState.IsDead)
                 {
                     var nextHeadLocation = snake.NextHeadLocation(directionManager.Dequeue());
 
                     if (snake.Contains(nextHeadLocation))
                     {
                         // Snake is dead.
-                        IsDead = true;
+                        snakeState.IsDead = true;
                     }
 
                     snake.Enqueue(nextHeadLocation);
@@ -76,7 +58,7 @@ namespace Game
                     {
                         // Snake ate feed.
                         PlaceFeed();
-                        NotifyPropertyChanged(nameof(Score));
+                        snakeState.ScoreValueChanged();
                     }
                     else
                     {
@@ -97,8 +79,6 @@ namespace Game
 
             feed.ShowFeed();
         }
-
-        private void NotifyPropertyChanged([CallerMemberName] string propertyName = "") => PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
     }
 }
 

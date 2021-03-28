@@ -1,6 +1,6 @@
 ﻿using NUnit.Framework;
 
-namespace Game.UnitTests.Control
+namespace Game.UnitTests
 {
     class DirectionManagerTests
     {

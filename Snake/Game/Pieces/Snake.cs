@@ -8,9 +8,9 @@ namespace Game
         private readonly GameBoard gameBoard;
         private readonly int snakeInitialX;
         private readonly int snakeInitialY;
-        public int InitialLength { get; }
-
         private CellLocation head;
+
+        public int InitialLength { get; }
 
         public Snake(GameBoard gameBoard, int snakeInitialX, int snakeInitialY, int snakeInitialLength)
         {

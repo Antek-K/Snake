@@ -1,17 +1,17 @@
 ﻿namespace Game
 {
-    class Parameters
+    static class Parameters
     {
-        public const int ColumnCount = 20;
-        public const int RowCount = 20;
+        public static int ColumnCount { get; } = 20;
+        public static int RowCount { get; } = 20;
 
-        public const int SnakeInitialX = 5;
-        public const int SnakeInitialY = 10;
-        public const int SnakeInitialLength = 10;
-        public const Direction InitialDirection = Direction.Right;
+        public static int SnakeInitialX { get; } = 5;
+        public static int SnakeInitialY { get; } = 10;
+        public static int SnakeInitialLength { get; } = 10;
+        public static Direction InitialDirection { get; } = Direction.Right;
 
-        public const int SpeedMsPerMove = 100;
+        public static int SpeedMsPerMove { get; } = 100;
 
-        public const int ScoreFactor = 1000;
+        public static int ScoreFactor { get; } = 1000;
     }
 }
