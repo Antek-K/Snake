@@ -2,7 +2,7 @@
 
 namespace Game
 {
-    class GameBoard
+    public class GameBoard
     {
         private readonly Cell[][] board;
 

@@ -3,7 +3,7 @@ using System.Diagnostics.CodeAnalysis;
 
 namespace Game
 {
-    class CellLocation : IEquatable<CellLocation>
+    public class CellLocation : IEquatable<CellLocation>
     {
         public CellLocation(int x, int y)
         {
@@ -25,6 +25,10 @@ namespace Game
             protected set;
         }
 
-        public bool Equals([AllowNull] CellLocation other) =>  X == other?.X && Y == other?.Y;
+        public virtual bool Equals([AllowNull] CellLocation other) =>  X == other?.X && Y == other?.Y;
+
+        public override bool Equals(object obj) => Equals(obj as CellLocation);
+
+        public override int GetHashCode() => HashCode.Combine(X, Y);
     }
 }
