@@ -21,7 +21,7 @@ namespace Game.UnitTests.Pieces
 
             bool result = cellLocation1.Equals(cellLocation2);
 
-            Assert.AreEqual(true, result);
+            Assert.IsTrue(result);
         }
 
         [Test]
@@ -32,7 +32,7 @@ namespace Game.UnitTests.Pieces
 
             bool result = cellLocation1.Equals(cellLocation2);
 
-            Assert.AreEqual(false, result);
+            Assert.IsFalse(result);
         }
 
         [Test]
@@ -43,7 +43,7 @@ namespace Game.UnitTests.Pieces
 
             bool result = cellLocation1.Equals(cellLocation2);
 
-            Assert.AreEqual(false, result);
+            Assert.IsFalse(result);
         }
 
         [Test]
@@ -54,7 +54,7 @@ namespace Game.UnitTests.Pieces
 
             bool result = cellLocation1.Equals(cellLocation2);
 
-            Assert.AreEqual(false, result);
+            Assert.IsFalse(result);
         }
 
         [Test]
@@ -65,7 +65,7 @@ namespace Game.UnitTests.Pieces
 
             bool result = cellLocation1.Equals(cellLocation2);
 
-            Assert.AreEqual(true, result);
+            Assert.IsTrue(result);
         }
 
         [Test]
@@ -76,7 +76,7 @@ namespace Game.UnitTests.Pieces
 
             bool result = cellLocation1.Equals(cellLocation2);
 
-            Assert.AreEqual(false, result);
+            Assert.IsFalse(result);
         }
 
         [Test]

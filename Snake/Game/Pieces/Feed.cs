@@ -2,7 +2,7 @@
 
 namespace Game
 {
-    class Feed : CellLocation
+    public class Feed : CellLocation
     {
         private readonly GameBoard gameBoard;
         private readonly Random random = new();
