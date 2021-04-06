@@ -1,4 +1,5 @@
 ﻿using NUnit.Framework;
+using System.Linq;
 using System.Threading;
 using System.Windows.Media;
 using System.Windows.Shapes;
@@ -57,6 +58,9 @@ namespace Game.UnitTests.Pieces
 
             Assert.IsInstanceOf(typeof(Ellipse), gameBoard[feed].Shape);
             Assert.AreEqual(Brushes.Red, gameBoard[feed].Shape.Fill);
+            int PiecesOnBoardNumber = 0;
+            gameBoard.FlatBoard().ToList().ForEach(cell => { if (cell.Shape != null) PiecesOnBoardNumber++; });
+            Assert.AreEqual(1, PiecesOnBoardNumber);
         }
 
         [Test]
@@ -69,6 +73,9 @@ namespace Game.UnitTests.Pieces
             feed.Clear();
 
             Assert.IsNull(gameBoard[feed].Shape);
+            int PiecesOnBoardNumber = 0;
+            gameBoard.FlatBoard().ToList().ForEach(cell => { if (cell.Shape != null) PiecesOnBoardNumber++; });
+            Assert.AreEqual(0, PiecesOnBoardNumber);
         }
 
 

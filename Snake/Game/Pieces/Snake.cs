@@ -3,7 +3,7 @@ using System.Linq;
 
 namespace Game
 {
-    class Snake : Queue<CellLocation>
+    public class Snake : Queue<CellLocation>
     {
         private readonly GameBoard gameBoard;
         private readonly int snakeInitialX;
