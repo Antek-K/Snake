@@ -3,7 +3,7 @@ using System.Runtime.CompilerServices;
 
 namespace Game
 {
-    class SnakeState : INotifyPropertyChanged
+    public class SnakeState : INotifyPropertyChanged
     {
         private readonly Snake snake;
         private readonly int scoreFactor;
