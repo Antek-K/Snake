@@ -1,10 +1,6 @@
 ﻿using NUnit.Framework;
-using System;
-using System.Collections.Generic;
 using System.Linq;
-using System.Text;
 using System.Threading;
-using System.Threading.Tasks;
 using System.Windows.Media;
 using System.Windows.Shapes;
 
@@ -78,7 +74,7 @@ namespace Game.UnitTests
             Assert.AreEqual(3, PiecesOnBoardNumber);
         }
 
-            [Test]
+        [Test]
         public void NextHeadLocation_WhenDirectionLeft_ReturnsProperCellLocation()
         {
             var gameBoard = new GameBoard(3, 3);

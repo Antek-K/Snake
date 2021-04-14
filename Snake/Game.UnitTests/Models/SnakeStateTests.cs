@@ -39,7 +39,7 @@ namespace Game.UnitTests.Models
         }
 
         [Test]
-        public void Score_WhenScoreFactorIs30And7PicesEnqueued_ScoreIs210()
+        public void Score_WhenScoreFactorIs30And7PiecesEnqueued_ScoreIs210()
         {
             var gameBoard = new GameBoard(10, 10);
             var snake = new Snake(gameBoard, 0, 0, 1);

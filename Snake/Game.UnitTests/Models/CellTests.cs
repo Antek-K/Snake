@@ -30,7 +30,7 @@ namespace Game.UnitTests
         }
 
         [Test]
-        public void Place_AfterCalled_ShapeIsRedEllipse()
+        public void PlaceFeed_AfterCalled_ShapeIsRedEllipse()
         {
             var cell = new Cell();
             cell.PlaceSnake();
