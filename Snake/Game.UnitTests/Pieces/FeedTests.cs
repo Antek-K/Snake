@@ -4,7 +4,7 @@ using System.Threading;
 using System.Windows.Media;
 using System.Windows.Shapes;
 
-namespace Game.UnitTests.Pieces
+namespace Game.UnitTests
 {
     [Apartment(ApartmentState.STA)]
     class FeedTests

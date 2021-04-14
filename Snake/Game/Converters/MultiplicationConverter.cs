@@ -4,7 +4,7 @@ using System.Windows.Data;
 
 namespace Game
 {
-    class MultiplicationConverter : IValueConverter
+    public class MultiplicationConverter : IValueConverter
     {
         public object Convert(object value, Type targetType, object parameter, CultureInfo culture)
         {

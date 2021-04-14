@@ -2,7 +2,7 @@
 using System.ComponentModel;
 using System.Threading;
 
-namespace Game.UnitTests.Models
+namespace Game.UnitTests
 {
     [Apartment(ApartmentState.STA)]
     class SnakeStateTests

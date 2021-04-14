@@ -1,6 +1,6 @@
 ﻿using NUnit.Framework;
 
-namespace Game.UnitTests.Pieces
+namespace Game.UnitTests
 {
     class CellLocationTests
     {
