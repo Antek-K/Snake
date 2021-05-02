@@ -7,7 +7,7 @@ namespace Game
 {
     public class Cell : INotifyPropertyChanged
     {
-        private readonly Shape feed = new Ellipse() { Fill = Brushes.Red };
+        private readonly Shape food = new Ellipse() { Fill = Brushes.Red };
         private readonly Shape snake = new Rectangle() { Fill = Brushes.Black };
 
         private Shape shape;
@@ -26,7 +26,7 @@ namespace Game
         }
 
         public void PlaceSnake() => Shape = snake;
-        public void PlaceFeed() => Shape = feed;
+        public void PlaceFood() => Shape = food;
         public void Clear() => Shape = null;
 
         private void NotifyPropertyChanged([CallerMemberName] string propertyName = "")

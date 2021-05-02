@@ -1,23 +1,20 @@
-﻿using System.Collections.Generic;
-
-namespace Game
+﻿namespace Game
 {
     public class GameBoard
     {
-        private readonly Cell[][] board;
+        private readonly Cell[,] board;
 
-        public GameBoard(int x, int y)
+        public GameBoard(int columnCount, int rowCount)
         {
-            ColumnCount = x;
-            RowCount = y;
+            ColumnCount = columnCount;
+            RowCount = rowCount;
 
-            board = new Cell[ColumnCount][];
-            for (int i = 0; i < ColumnCount; i++)
+            board = new Cell[RowCount, ColumnCount];
+            for (int i = 0; i < RowCount; i++)
             {
-                board[i] = new Cell[RowCount];
-                for (int j = 0; j < RowCount; j++)
+                for (int j = 0; j < ColumnCount; j++)
                 {
-                    board[i][j] = new Cell();
+                    board[i, j] = new Cell();
                 }
             }
         }
@@ -25,20 +22,19 @@ namespace Game
         public int RowCount { get; }
         public int ColumnCount { get; }
 
-        public Cell this[CellLocation cellLocation] => board[cellLocation.X][cellLocation.Y];
+        public Cell this[CellLocation cellLocation] => board[cellLocation.Column, cellLocation.Row];
 
         public Cell[] FlatBoard()
         {
-            var flatBoard = new List<Cell>();
-
-            for (int j = 0; j < RowCount; j++)
+            var flatBoard = new Cell[RowCount* ColumnCount];
+            
+            int i = 0;
+            foreach(var cell in board)
             {
-                for (int i = 0; i < ColumnCount; i++)
-                {
-                    flatBoard.Add(board[i][j]);
-                }
+                flatBoard[i++] = cell;
             }
-            return flatBoard.ToArray();
+
+            return flatBoard;
         }
     }
 }

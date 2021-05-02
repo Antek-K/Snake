@@ -6,17 +6,15 @@ namespace Game
 {
     class MainWindowViewModel
     {
-        private readonly DirectionManager directionManager;
+        private readonly DirectionBuffer directionBuffer;
         private readonly GameLogic gameLogic;
 
         public MainWindowViewModel()
         {
             var gameBoard = new GameBoard(Parameters.ColumnCount, Parameters.RowCount);
-            var snake = new Snake(gameBoard, Parameters.SnakeInitialX, Parameters.SnakeInitialY, Parameters.SnakeInitialLength);
-            var feed = new Feed(gameBoard);
-            directionManager = new DirectionManager(Parameters.InitialDirection);
-            SnakeState = new SnakeState(snake, Parameters.ScoreFactor);
-            gameLogic = new GameLogic(snake, feed, directionManager, SnakeState, Parameters.SpeedMsPerMove);
+            directionBuffer = new DirectionBuffer(Parameters.InitialDirection);
+            SnakeState = new SnakeState(Parameters.SnakeInitialLength, Parameters.ScoreFactor);
+            gameLogic = new GameLogic(gameBoard, directionBuffer, SnakeState);
 
             FlatBoard = new ObservableCollection<Cell>(gameBoard.FlatBoard());
             ColumnCount = gameBoard.ColumnCount;
@@ -29,9 +27,9 @@ namespace Game
         public int RowCount { get; }
 
         public ICommand StartCommand => new RelayCommand(gameLogic.Start, () => SnakeState.IsDead);
-        public ICommand GoLeftCommand => new RelayCommand(() => directionManager.Enqueue(Direction.Left));
-        public ICommand GoDownCommand => new RelayCommand(() => directionManager.Enqueue(Direction.Down));
-        public ICommand GoRightCommand => new RelayCommand(() => directionManager.Enqueue(Direction.Right));
-        public ICommand GoUpCommand => new RelayCommand(() => directionManager.Enqueue(Direction.Up));
+        public ICommand GoLeftCommand => new RelayCommand(() => directionBuffer.AddDirectionToBuffer(Direction.Left));
+        public ICommand GoDownCommand => new RelayCommand(() => directionBuffer.AddDirectionToBuffer(Direction.Down));
+        public ICommand GoRightCommand => new RelayCommand(() => directionBuffer.AddDirectionToBuffer(Direction.Right));
+        public ICommand GoUpCommand => new RelayCommand(() => directionBuffer.AddDirectionToBuffer(Direction.Up));
     }
 }

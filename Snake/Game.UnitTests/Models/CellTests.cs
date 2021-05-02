@@ -35,7 +35,7 @@ namespace Game.UnitTests
             var cell = new Cell();
             cell.PlaceSnake();
 
-            cell.PlaceFeed();
+            cell.PlaceFood();
 
             Assert.IsInstanceOf<Ellipse>(cell.Shape);
             Assert.AreEqual(Brushes.Red, cell.Shape.Fill);
@@ -45,7 +45,7 @@ namespace Game.UnitTests
         public void Clear_AfterCalled_ShapeIsNull()
         {
             var cell = new Cell();
-            cell.PlaceFeed();
+            cell.PlaceFood();
 
             cell.Clear();
 
@@ -76,7 +76,7 @@ namespace Game.UnitTests
             Cell.Dispatcher = new DispatcherMock();
             cell.PropertyChanged += (object sender, PropertyChangedEventArgs e) => { eventSender = sender; eventArgs = e; };
 
-            cell.PlaceFeed();
+            cell.PlaceFood();
 
             Assert.AreSame(cell, eventSender);
             Assert.AreEqual(nameof(cell.Shape), eventArgs?.PropertyName);

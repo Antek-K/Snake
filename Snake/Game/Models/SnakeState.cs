@@ -5,20 +5,32 @@ namespace Game
 {
     public class SnakeState : INotifyPropertyChanged
     {
-        private readonly Snake snake;
+        private readonly int snakeInitialLength;
         private readonly int scoreFactor;
 
+        private int snakeLength;
         private bool isDead;
 
         public event PropertyChangedEventHandler PropertyChanged;
 
-        public SnakeState(Snake snake, int scoreFactor)
+        public SnakeState(int snakeInitialLength, int scoreFactor)
         {
-            this.snake = snake;
+            this.snakeInitialLength = snakeInitialLength;
             this.scoreFactor = scoreFactor;
+            SnakeLength = snakeInitialLength;
         }
 
-        public object Score => (snake.Count - snake.InitialLength) * scoreFactor;
+        public int SnakeLength 
+        { 
+            get => snakeLength;
+            set
+            {
+                snakeLength = value;
+                NotifyPropertyChanged(nameof(Score));
+            }
+        }
+
+        public object Score => (SnakeLength - snakeInitialLength) * scoreFactor;
 
         public bool IsDead
         {
@@ -30,7 +42,6 @@ namespace Game
             }
         }
 
-        public void ScoreValueChanged() => NotifyPropertyChanged(nameof(Score));
         private void NotifyPropertyChanged([CallerMemberName] string propertyName = "") => PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
     }
 }

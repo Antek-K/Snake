@@ -5,30 +5,22 @@ namespace Game
 {
     public class CellLocation : IEquatable<CellLocation>
     {
-        public CellLocation(int x, int y)
+        public CellLocation(int row, int column)
         {
-            X = x;
-            Y = y;
+            Row = row;
+            Column = column;
         }
 
-        protected CellLocation() { }
+        public CellLocation() { }
 
-        public int X
-        {
-            get;
-            protected set;
-        }
+        public int Row { get; set; }
 
-        public int Y
-        {
-            get;
-            protected set;
-        }
+        public int Column { get; set; }
 
-        public virtual bool Equals([AllowNull] CellLocation other) =>  X == other?.X && Y == other?.Y;
+        public virtual bool Equals([AllowNull] CellLocation other) => Row == other?.Row && Column == other?.Column;
 
         public override bool Equals(object obj) => Equals(obj as CellLocation);
 
-        public override int GetHashCode() => HashCode.Combine(X, Y);
+        public override int GetHashCode() => HashCode.Combine(Row, Column);
     }
 }

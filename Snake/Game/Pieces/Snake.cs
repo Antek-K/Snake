@@ -3,58 +3,62 @@ using System.Linq;
 
 namespace Game
 {
-    public class Snake : Queue<CellLocation>
+    public class Snake
     {
+        private readonly Queue<CellLocation> snakeBodyQueue;
         private readonly GameBoard gameBoard;
-        private readonly int snakeInitialX;
-        private readonly int snakeInitialY;
-        private CellLocation head;
+        private readonly SnakeState snakeState;
+        private readonly int headInitialRow;
+        private readonly int headInitialColumn;
+        private readonly int snakeInitialLength;
+        private CellLocation headLocation;
+        private CellLocation nextHeadLocation;
 
-        public int InitialLength { get; }
-
-        public Snake(GameBoard gameBoard, int snakeInitialX, int snakeInitialY, int snakeInitialLength)
+        public Snake(GameBoard gameBoard, SnakeState snakeState, int headInitialRow, int headInitialColumn, int snakeInitialLength)
         {
+            snakeBodyQueue = new Queue<CellLocation>();
             this.gameBoard = gameBoard;
-            this.snakeInitialX = snakeInitialX;
-            this.snakeInitialY = snakeInitialY;
-            InitialLength = snakeInitialLength;
+            this.snakeState = snakeState;
+            this.headInitialRow = headInitialRow;
+            this.headInitialColumn = headInitialColumn;
+            this.snakeInitialLength = snakeInitialLength;
         }
 
-        public new void Clear()
+        public void ExtendAndMove()
         {
-            this.ToList().ForEach(cell => gameBoard[cell].Clear());
-            base.Clear();
+            MoveHead(nextHeadLocation);
+            snakeState.SnakeLength = snakeBodyQueue.Count;
         }
 
-        public new void Enqueue(CellLocation newHeadLocation)
+        public void Move()
         {
-            head = newHeadLocation;
-            base.Enqueue(head);
-            gameBoard[head].PlaceSnake();
-        }
-
-        public new CellLocation Dequeue()
-        {
-            var tail = base.Dequeue();
-            gameBoard[tail].Clear();
-            return tail;
+            MoveHead(nextHeadLocation);
+            MoveTail();
         }
 
         public void Initialize(Direction direction)
         {
             Clear();
 
-            Enqueue(new CellLocation(snakeInitialX, snakeInitialY));
-            for (int i = 1; i < InitialLength; i++)
+            nextHeadLocation = new CellLocation(headInitialRow, headInitialColumn);
+            ExtendAndMove();
+            for (int i = 1; i < snakeInitialLength; i++)
             {
-                Enqueue(NextHeadLocation(direction));
+                PrepareNextMove(direction);
+                ExtendAndMove();
             }
         }
 
-        public CellLocation NextHeadLocation(Direction direction)
+        public bool IsSnakeDying() => snakeBodyQueue.Contains(nextHeadLocation);
+
+        public bool Contains(CellLocation cellLocation) => snakeBodyQueue.Contains(cellLocation);
+
+        public bool IsSnakeEating(CellLocation food) => food.Equals(nextHeadLocation);
+
+        public void PrepareNextMove(Direction direction)
         {
-            var x = head.X;
-            var y = head.Y;
+            var x = headLocation.Row;
+            var y = headLocation.Column;
 
             switch (direction)
             {
@@ -71,9 +75,28 @@ namespace Game
                     y = SumModulo(y, 1, gameBoard.RowCount);
                     break;
             }
-            return new CellLocation(x, y);
+            nextHeadLocation = new CellLocation(x, y);
         }
 
-        private int SumModulo(int a, int b, int modulo) => (a + b + modulo) % modulo;
+        private static int SumModulo(int a, int b, int modulo) => (a + b + modulo) % modulo;
+
+        private void Clear()
+        {
+            snakeBodyQueue.ToList().ForEach(cell => gameBoard[cell].Clear());
+            snakeBodyQueue.Clear();
+        }
+
+        private void MoveHead(CellLocation nextHeadLocation)
+        {
+            headLocation = nextHeadLocation;
+            snakeBodyQueue.Enqueue(headLocation);
+            gameBoard[headLocation].PlaceSnake();
+        }
+
+        private void MoveTail()
+        {
+            var tail = snakeBodyQueue.Dequeue();
+            gameBoard[tail].Clear();
+        }
     }
 }

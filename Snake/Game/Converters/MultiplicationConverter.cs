@@ -8,9 +8,9 @@ namespace Game
     {
         public object Convert(object value, Type targetType, object parameter, CultureInfo culture)
         {
-            if (value is int && parameter is int)
+            if (value is int intValue && parameter is int intParameter)
             {
-                return (int)value * (int)parameter;
+                return intValue * intParameter;
             }
             if(value is int)
             {

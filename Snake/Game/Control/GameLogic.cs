@@ -6,20 +6,21 @@ namespace Game
     class GameLogic
     {
         private readonly Snake snake;
-        private readonly Feed feed;
-        private readonly DirectionManager directionManager;
+        private readonly Food food;
+        private readonly DirectionBuffer directionBuffer;
         private readonly SnakeState snakeState;
 
         private readonly int speedMsPerMove;
 
-        public GameLogic(Snake snake, Feed feed, DirectionManager directionManager, SnakeState snakeState, int speedMsPerMove)
+        public GameLogic(GameBoard gameBoard, DirectionBuffer directionBuffer, SnakeState snakeState)
         {
-            this.snake = snake;
-            this.feed = feed;
-            this.directionManager = directionManager;
+            this.directionBuffer = directionBuffer;
             this.snakeState = snakeState;
 
-            this.speedMsPerMove = speedMsPerMove;
+            snake = new Snake(gameBoard, snakeState, Parameters.SnakeInitialX, Parameters.SnakeInitialY, Parameters.SnakeInitialLength);
+            food = new Food(gameBoard, snake);
+            
+            speedMsPerMove = Parameters.SpeedMsPerMove;
 
             snakeState.IsDead = true;
 
@@ -28,12 +29,11 @@ namespace Game
 
         public void Start()
         {
-            feed.Clear();
+            food.Clear();
 
-            directionManager.Initialize();
-            snake.Initialize(directionManager.Dequeue());
-            snakeState.ScoreValueChanged();
-            PlaceFeed();
+            directionBuffer.Initialize();
+            snake.Initialize(directionBuffer.GetNextDirection());
+            food.PlaceFoodNotAtSnake();
 
             snakeState.IsDead = false;
         }
@@ -44,40 +44,24 @@ namespace Game
             {
                 if (!snakeState.IsDead)
                 {
-                    var nextHeadLocation = snake.NextHeadLocation(directionManager.Dequeue());
+                    snake.PrepareNextMove(directionBuffer.GetNextDirection());
+                    snakeState.IsDead = snake.IsSnakeDying();
 
-                    if (snake.Contains(nextHeadLocation))
+                    if (!snakeState.IsDead)
                     {
-                        // Snake is dead.
-                        snakeState.IsDead = true;
-                    }
-
-                    snake.Enqueue(nextHeadLocation);
-
-                    if (feed.Equals(nextHeadLocation))
-                    {
-                        // Snake ate feed.
-                        PlaceFeed();
-                        snakeState.ScoreValueChanged();
-                    }
-                    else
-                    {
-                        // Snake didn't eat feed.
-                        snake.Dequeue();
+                        if (snake.IsSnakeEating(food.FoodLocation))
+                        {
+                            snake.ExtendAndMove();
+                            food.PlaceFoodNotAtSnake();
+                        }
+                        else
+                        {
+                            snake.Move();
+                        }
                     }
                 }
                 Thread.Sleep(speedMsPerMove);
             }
-        }
-
-        private void PlaceFeed()
-        {
-            do
-            {
-                feed.SetFeedLocationRandomly();
-            } while (snake.Contains(feed));
-
-            feed.ShowFeed();
         }
     }
 }

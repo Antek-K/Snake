@@ -9,8 +9,8 @@ namespace Game.UnitTests
         {
             var cellLocation = new CellLocation(2, 7);
 
-            Assert.AreEqual(2, cellLocation.X);
-            Assert.AreEqual(7, cellLocation.Y);
+            Assert.AreEqual(2, cellLocation.Row);
+            Assert.AreEqual(7, cellLocation.Column);
         }
 
         [Test]
