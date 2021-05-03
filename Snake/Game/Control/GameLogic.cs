@@ -3,6 +3,11 @@ using System.Threading.Tasks;
 
 namespace Game
 {
+    /// <summary>
+    /// The central class in the game.
+    /// Contects parts of the application.
+    /// Contains main loop of the game.
+    /// </summary>
     class GameLogic
     {
         private readonly Snake snake;
@@ -17,7 +22,7 @@ namespace Game
             this.directionBuffer = directionBuffer;
             this.snakeState = snakeState;
 
-            snake = new Snake(gameBoard, snakeState, Parameters.SnakeInitialX, Parameters.SnakeInitialY, Parameters.SnakeInitialLength);
+            snake = new Snake(gameBoard, snakeState, Parameters.SnakeInitialRow, Parameters.SnakeInitialColumn, Parameters.SnakeInitialLength);
             food = new Food(gameBoard, snake);
             
             speedMsPerMove = Parameters.SpeedMsPerMove;
@@ -29,11 +34,11 @@ namespace Game
 
         public void Start()
         {
-            food.Clear();
+            food.Hide();
 
             directionBuffer.Initialize();
             snake.Initialize(directionBuffer.GetNextDirection());
-            food.PlaceFoodNotAtSnake();
+            food.PlaceFoodRandomlyNotAtSnake();
 
             snakeState.IsDead = false;
         }
@@ -52,7 +57,7 @@ namespace Game
                         if (snake.IsSnakeEating(food.FoodLocation))
                         {
                             snake.ExtendAndMove();
-                            food.PlaceFoodNotAtSnake();
+                            food.PlaceFoodRandomlyNotAtSnake();
                         }
                         else
                         {

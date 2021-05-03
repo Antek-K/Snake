@@ -34,7 +34,7 @@
                     </ItemsControl.ItemTemplate>
                     <ItemsControl.ItemsPanel>
                         <ItemsPanelTemplate>
-                            <UniformGrid Columns="{Binding ColumnCount}" Rows="{Binding RowCount}" />
+                            <UniformGrid Rows="{Binding RowCount}" Columns="{Binding ColumnCount}" />
                         </ItemsPanelTemplate>
                     </ItemsControl.ItemsPanel>
                 </ItemsControl>

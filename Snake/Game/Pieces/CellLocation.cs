@@ -3,6 +3,9 @@ using System.Diagnostics.CodeAnalysis;
 
 namespace Game
 {
+    /// <summary>
+    /// Determines location, row and column, of specific cell on the game board.
+    /// </summary>
     public class CellLocation : IEquatable<CellLocation>
     {
         public CellLocation(int row, int column)
@@ -14,8 +17,8 @@ namespace Game
         public CellLocation() { }
 
         public int Row { get; set; }
-
         public int Column { get; set; }
+
 
         public virtual bool Equals([AllowNull] CellLocation other) => Row == other?.Row && Column == other?.Column;
 

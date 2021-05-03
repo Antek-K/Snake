@@ -3,6 +3,10 @@ using System.Linq;
 
 namespace Game
 {
+    /// <summary>
+    /// Determines location of the snake on game board.
+    /// Provides methods to move it.
+    /// </summary>
     public class Snake
     {
         private readonly Queue<CellLocation> snakeBodyQueue;
@@ -57,25 +61,25 @@ namespace Game
 
         public void PrepareNextMove(Direction direction)
         {
-            var x = headLocation.Row;
-            var y = headLocation.Column;
+            var row = headLocation.Row;
+            var column = headLocation.Column;            
 
             switch (direction)
             {
-                case Direction.Left:
-                    x = SumModulo(x, -1, gameBoard.ColumnCount);
-                    break;
-                case Direction.Right:
-                    x = SumModulo(x, 1, gameBoard.ColumnCount);
-                    break;
                 case Direction.Up:
-                    y = SumModulo(y, -1, gameBoard.RowCount);
+                    row = SumModulo(row, -1, gameBoard.RowCount);
                     break;
                 case Direction.Down:
-                    y = SumModulo(y, 1, gameBoard.RowCount);
+                    row = SumModulo(row, 1, gameBoard.RowCount);
+                    break;
+                case Direction.Left:
+                    column = SumModulo(column, -1, gameBoard.ColumnCount);
+                    break;
+                case Direction.Right:
+                    column = SumModulo(column, 1, gameBoard.ColumnCount);
                     break;
             }
-            nextHeadLocation = new CellLocation(x, y);
+            nextHeadLocation = new CellLocation(row, column);
         }
 
         private static int SumModulo(int a, int b, int modulo) => (a + b + modulo) % modulo;

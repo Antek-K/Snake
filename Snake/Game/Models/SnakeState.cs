@@ -3,6 +3,9 @@ using System.Runtime.CompilerServices;
 
 namespace Game
 {
+    /// <summary>
+    /// Determines if the snake is dead and the score in the game.
+    /// </summary>
     public class SnakeState : INotifyPropertyChanged
     {
         private readonly int snakeInitialLength;

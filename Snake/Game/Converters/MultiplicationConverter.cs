@@ -4,6 +4,9 @@ using System.Windows.Data;
 
 namespace Game
 {
+    /// <summary>
+    /// Provides one way multiplication converter for int values.
+    /// </summary>
     public class MultiplicationConverter : IValueConverter
     {
         public object Convert(object value, Type targetType, object parameter, CultureInfo culture)

@@ -2,6 +2,10 @@
 
 namespace Game
 {
+    /// <summary>
+    /// Provides buffer of directions inserted by user.
+    /// Returns only directions that make sense in the game.
+    /// </summary>
     public class DirectionBuffer 
     {
         private readonly Direction initialDirection;

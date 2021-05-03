@@ -5,6 +5,9 @@ using System.Windows.Shapes;
 
 namespace Game
 {
+    /// <summary>
+    /// Specified the shape that is placed in the cell.
+    /// </summary>
     public class Cell : INotifyPropertyChanged
     {
         private readonly Shape food = new Ellipse() { Fill = Brushes.Red };

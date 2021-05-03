@@ -2,6 +2,10 @@
 
 namespace Game
 {
+    /// <summary>
+    /// Determines location of the food on the game board.
+    /// Provides methods to change location randomly, show food or hide it.
+    /// </summary>
     public class Food
     {
         private readonly GameBoard gameBoard;
@@ -12,16 +16,16 @@ namespace Game
         {
             this.gameBoard = gameBoard;
             this.snake = snake;
-            PlaceFoodNotAtSnake();
+            PlaceFoodRandomlyNotAtSnake();
         }
 
         public CellLocation FoodLocation { get; } = new CellLocation();
 
         public void ShowFood() => gameBoard[FoodLocation].PlaceFood();
 
-        public void Clear() => gameBoard[FoodLocation].Clear();
+        public void Hide() => gameBoard[FoodLocation].Clear();
 
-        public void PlaceFoodNotAtSnake()
+        public void PlaceFoodRandomlyNotAtSnake()
         {
             do
             {
@@ -33,8 +37,8 @@ namespace Game
 
         private void SetFoodLocationRandomly()
         {
-            FoodLocation.Row = random.Next(0, gameBoard.ColumnCount);
-            FoodLocation.Column = random.Next(0, gameBoard.RowCount);
+            FoodLocation.Row = random.Next(0, gameBoard.RowCount);
+            FoodLocation.Column = random.Next(0, gameBoard.ColumnCount);
         }
     }
 }
