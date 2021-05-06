@@ -30,7 +30,7 @@ namespace Game
             do
             {
                 SetFoodLocationRandomly();
-            } while (snake.Contains(FoodLocation));
+            } while (snake.IsLocationOnSnake(FoodLocation));
 
             ShowFood();
         }

@@ -49,23 +49,28 @@ namespace Game
             {
                 if (!snakeState.IsDead)
                 {
-                    snake.PrepareNextMove(directionBuffer.GetNextDirection());
-                    snakeState.IsDead = snake.IsSnakeDying();
-
-                    if (!snakeState.IsDead)
-                    {
-                        if (snake.IsSnakeEating(food.FoodLocation))
-                        {
-                            snake.ExtendAndMove();
-                            food.PlaceFoodRandomlyNotAtSnake();
-                        }
-                        else
-                        {
-                            snake.Move();
-                        }
-                    }
+                    PerformMove();
                 }
                 Thread.Sleep(speedMsPerMove);
+            }
+        }
+
+        private void PerformMove()
+        {
+            snake.PrepareNextMove(directionBuffer.GetNextDirection());
+            snakeState.IsDead = snake.IsSnakeDying();
+
+            if (!snakeState.IsDead)
+            {
+                if (snake.IsSnakeEating(food.FoodLocation))
+                {
+                    snake.ExtendAndMove();
+                    food.PlaceFoodRandomlyNotAtSnake();
+                }
+                else
+                {
+                    snake.Move();
+                }
             }
         }
     }

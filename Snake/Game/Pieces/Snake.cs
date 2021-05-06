@@ -9,35 +9,25 @@ namespace Game
     /// </summary>
     public class Snake
     {
-        private readonly Queue<CellLocation> snakeBodyQueue;
         private readonly GameBoard gameBoard;
         private readonly SnakeState snakeState;
+
         private readonly int headInitialRow;
         private readonly int headInitialColumn;
         private readonly int snakeInitialLength;
+
+        private readonly Queue<CellLocation> snakeBodyQueue = new();
         private CellLocation headLocation;
         private CellLocation nextHeadLocation;
 
         public Snake(GameBoard gameBoard, SnakeState snakeState, int headInitialRow, int headInitialColumn, int snakeInitialLength)
         {
-            snakeBodyQueue = new Queue<CellLocation>();
             this.gameBoard = gameBoard;
             this.snakeState = snakeState;
+
             this.headInitialRow = headInitialRow;
             this.headInitialColumn = headInitialColumn;
             this.snakeInitialLength = snakeInitialLength;
-        }
-
-        public void ExtendAndMove()
-        {
-            MoveHead(nextHeadLocation);
-            snakeState.SnakeLength = snakeBodyQueue.Count;
-        }
-
-        public void Move()
-        {
-            MoveHead(nextHeadLocation);
-            MoveTail();
         }
 
         public void Initialize(Direction direction)
@@ -53,16 +43,10 @@ namespace Game
             }
         }
 
-        public bool IsSnakeDying() => snakeBodyQueue.Contains(nextHeadLocation);
-
-        public bool Contains(CellLocation cellLocation) => snakeBodyQueue.Contains(cellLocation);
-
-        public bool IsSnakeEating(CellLocation food) => food.Equals(nextHeadLocation);
-
         public void PrepareNextMove(Direction direction)
         {
             var row = headLocation.Row;
-            var column = headLocation.Column;            
+            var column = headLocation.Column;
 
             switch (direction)
             {
@@ -80,6 +64,24 @@ namespace Game
                     break;
             }
             nextHeadLocation = new CellLocation(row, column);
+        }
+
+        public bool IsSnakeDying() => snakeBodyQueue.Contains(nextHeadLocation);
+
+        public bool IsSnakeEating(CellLocation food) => food.Equals(nextHeadLocation);
+
+        public bool IsLocationOnSnake(CellLocation cellLocation) => snakeBodyQueue.Contains(cellLocation);
+
+        public void Move()
+        {
+            MoveHead(nextHeadLocation);
+            MoveTail();
+        }
+
+        public void ExtendAndMove()
+        {
+            MoveHead(nextHeadLocation);
+            snakeState.SnakeLength = snakeBodyQueue.Count;
         }
 
         private static int SumModulo(int a, int b, int modulo) => (a + b + modulo) % modulo;
