@@ -21,7 +21,7 @@ namespace Game
 
         public CellLocation FoodLocation { get; } = new CellLocation();
 
-        public void ShowFood() => gameBoard[FoodLocation].PlaceFood();
+        public void Show() => gameBoard[FoodLocation].PlaceFood();
 
         public void Hide() => gameBoard[FoodLocation].Clear();
 
@@ -32,7 +32,7 @@ namespace Game
                 SetFoodLocationRandomly();
             } while (snake.IsLocationOnSnake(FoodLocation));
 
-            ShowFood();
+            Show();
         }
 
         private void SetFoodLocationRandomly()

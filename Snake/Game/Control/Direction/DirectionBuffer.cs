@@ -11,7 +11,7 @@ namespace Game
         private readonly Direction initialDirection;
         private readonly Queue<Direction> directionQueue = new();
 
-        private Direction lastAddedDirection;
+        private Direction lastDirection;
 
         public DirectionBuffer(Direction initialDirection)
         {
@@ -20,10 +20,10 @@ namespace Game
 
         public void AddDirectionToBuffer(Direction direction)
         {
-            if(IsDirectionAcceptable(lastAddedDirection, direction))
+            if(IsDirectionAcceptable(lastDirection, direction))
             {
                 directionQueue.Enqueue(direction);
-                lastAddedDirection = direction;
+                lastDirection = direction;
             }
         }
 
@@ -33,14 +33,13 @@ namespace Game
             {
                 return directionQueue.Dequeue();
             }
-            return lastAddedDirection;
+            return lastDirection;
         }
 
         public void Initialize()
         {
             directionQueue.Clear();
-            directionQueue.Enqueue(initialDirection);
-            lastAddedDirection = initialDirection;
+            lastDirection = initialDirection;
         }
 
         // Snake can turn only its left or right

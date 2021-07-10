@@ -1,12 +1,11 @@
-﻿using NUnit.Framework;
-using System.Linq;
+﻿using System.Linq;
 using System.Threading;
 using System.Windows.Media;
 using System.Windows.Shapes;
 
 namespace Game.UnitTests
 {
-    [Apartment(ApartmentState.STA)]
+    //[Apartment(ApartmentState.STA)]
     class SnakeTests
     {
         /*[Test]

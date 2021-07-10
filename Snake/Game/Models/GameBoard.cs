@@ -5,7 +5,9 @@
         /// <summary>
         /// Specifies the size of the game board and provide access to all its cells.
         /// </summary>
-        private readonly Cell[,] board;
+        protected readonly Cell[,] board;
+
+        public GameBoard() { }
 
         public GameBoard(int rowCount, int columnCount)
         {
@@ -22,11 +24,11 @@
             }
         }
 
-        public int RowCount { get; }
-        public int ColumnCount { get; }
+        public virtual int RowCount { get; }
+        public virtual int ColumnCount { get; }
 
 
-        public Cell this[CellLocation cellLocation] => board[cellLocation.Row, cellLocation.Column];
+        public virtual Cell this[CellLocation cellLocation] => board[cellLocation.Row, cellLocation.Column];
 
         public Cell[] FlatBoard()
         {

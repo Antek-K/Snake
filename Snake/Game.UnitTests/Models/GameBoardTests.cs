@@ -1,42 +1,68 @@
-﻿using NUnit.Framework;
-using System.Threading;
+﻿using System.Threading;
+using Xunit;
+using Moq;
+using FluentAssertions;
 
 namespace Game.UnitTests
 {
-    [Apartment(ApartmentState.STA)]
-    class GameBoardTests
+    public class GameBoardTests
     {
-        [Test]
+        [StaFact]
         public void GameBoard_AfterCalled_HasProperRowAndColumnCountAndAllCellsInitialized()
         {
-            var gameBoard = new GameBoard(3, 5);
+            // Arrange
+            int rowCount = 3;
+            int columnCount = 2;
 
-            Assert.AreEqual(3, gameBoard.ColumnCount);
-            Assert.AreEqual(5, gameBoard.RowCount);
-            for(int i = 0; i < gameBoard.ColumnCount; i++)
+            // Act
+            var gameBoard = new GameBoard(rowCount, columnCount);
+
+            // Assert
+            gameBoard.RowCount.Should().Be(rowCount);
+            gameBoard.ColumnCount.Should().Be(columnCount);
+            for (int i = 0; i < gameBoard.RowCount; i++)
             {
-                for (int j = 0; j < gameBoard.RowCount; j++)
+                for (int j = 0; j < gameBoard.ColumnCount; j++)
                 {
-                    Assert.IsNotNull(gameBoard[new CellLocation(i, j)]);
+                    gameBoard[new CellLocation(i, j)].Should().NotBeNull().And.BeOfType<Cell>();
                 }
             }
         }
 
-        [Test]
+        [StaFact]
         public void FlatBoard_WhenCalled_ReturnsCellsInProperOrderAndNumber()
         {
-            var gameBoard = new GameBoard(4, 2);
+            // Arrange
+            int rowCount = 2;
+            int columnCount = 3;
+            var gameBoard = new GameBoardWithMockedCells(rowCount, columnCount);
 
+            // Act
             Cell[] flatBoard = gameBoard.FlatBoard();
 
-            Assert.AreEqual(gameBoard.ColumnCount * gameBoard.RowCount, flatBoard.Length);
+            // Assert
+            flatBoard.Length.Should().Be(6);
 
             int k = 0;
             for (int i = 0; i < gameBoard.RowCount; i++)
             {
                 for (int j = 0; j < gameBoard.ColumnCount; j++)
                 {
-                    Assert.AreSame(gameBoard[new CellLocation(j, i)], flatBoard[k++],"i: " + i + " j: " + j + " k: " + k);
+                    flatBoard[k++].Should().BeSameAs(gameBoard[new CellLocation(i, j)], "i: " + i + " j: " + j + " k: " + k);
+                }
+            }
+        }
+
+        private class GameBoardWithMockedCells : GameBoard
+        {
+            public GameBoardWithMockedCells(int rowCount, int columnCount) : base(rowCount, columnCount)
+            {
+                for (int i = 0; i < RowCount; i++)
+                {
+                    for (int j = 0; j < ColumnCount; j++)
+                    {
+                        board[i, j] = new Mock<Cell>().Object;
+                    }
                 }
             }
         }

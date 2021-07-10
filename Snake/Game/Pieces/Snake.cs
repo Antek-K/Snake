@@ -20,6 +20,8 @@ namespace Game
         private CellLocation headLocation;
         private CellLocation nextHeadLocation;
 
+        public Snake() { }
+
         public Snake(GameBoard gameBoard, SnakeState snakeState, int headInitialRow, int headInitialColumn, int snakeInitialLength)
         {
             this.gameBoard = gameBoard;
@@ -70,7 +72,7 @@ namespace Game
 
         public bool IsSnakeEating(CellLocation food) => food.Equals(nextHeadLocation);
 
-        public bool IsLocationOnSnake(CellLocation cellLocation) => snakeBodyQueue.Contains(cellLocation);
+        public virtual bool IsLocationOnSnake(CellLocation cellLocation) => snakeBodyQueue.Contains(cellLocation);
 
         public void Move()
         {

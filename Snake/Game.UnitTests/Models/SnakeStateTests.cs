@@ -1,133 +1,78 @@
-﻿using NUnit.Framework;
-using System.ComponentModel;
-using System.Threading;
+﻿using System.ComponentModel;
+using Xunit;
+using FluentAssertions;
 
 namespace Game.UnitTests
 {
-    [Apartment(ApartmentState.STA)]
-    class SnakeStateTests
+    // [Apartment(ApartmentState.STA)]
+    public class SnakeStateTests
     {
-        /*[Test]
-        public void Score_AfterSnakeInitialize_ScoreIsZero()
+        [Fact]
+        public void SnakeState_SetsSnakeLengthToSnakeInitialLength()
         {
-            var gameBoard = new GameBoard(10, 10);
-            var snake = new Snake(gameBoard, 0, 0, 4);
-            var snakeState = new SnakeState(snake, 1);
-            snake.Initialize(Direction.Right);
+            // Arrange
+            int snakeInitialLength = 2;
 
-            int score = (int)snakeState.Score;
+            // Act
+            var snakeState = new SnakeState(snakeInitialLength, 0);
 
-            Assert.Zero(score);
+            // Assert
+            snakeState.SnakeLength.Should().Be(snakeInitialLength);
         }
 
-        [Test]
-        public void Score_AfterEnqueueFivePieces_ScoreIsFive()
+        [Fact]
+        public void SnakeLengthSetter_RaisePropertyChangedForScore()
         {
-            var gameBoard = new GameBoard(10, 10);
-            var snake = new Snake(gameBoard, 0, 0, 4);
-            var snakeState = new SnakeState(snake, 1);
-            snake.Initialize(Direction.Right);
-            snake.MoveHead(snake.PrepareNextMove(Direction.Right));
-            snake.MoveHead(snake.PrepareNextMove(Direction.Right));
-            snake.MoveHead(snake.PrepareNextMove(Direction.Right));
-            snake.MoveHead(snake.PrepareNextMove(Direction.Down));
-            snake.MoveHead(snake.PrepareNextMove(Direction.Down));
+            // Arrange
+            var snakeState = new SnakeState(0, 0);
+            object eventSender = null;
+            PropertyChangedEventArgs eventArgs = null;
+            snakeState.PropertyChanged += (object sender, PropertyChangedEventArgs e) => { eventSender = sender; eventArgs = e; };
 
-            int score = (int)snakeState.Score;
+            // Act
+            snakeState.SnakeLength = 1;
 
-            Assert.AreEqual(5, score);
+            // Assert
+            eventSender.Should().Be(snakeState);
+            eventArgs.PropertyName.Should().Be("Score");
+
         }
 
-        [Test]
-        public void Score_WhenScoreFactorIs30And7PiecesEnqueued_ScoreIs210()
+        [Fact]
+        public void IsDeadSetter_RaisePropertyChanged()
         {
-            var gameBoard = new GameBoard(10, 10);
-            var snake = new Snake(gameBoard, 0, 0, 1);
-            var snakeState = new SnakeState(snake, 30);
-            snake.Initialize(Direction.Right);
-            snake.MoveHead(snake.PrepareNextMove(Direction.Right));
-            snake.MoveHead(snake.PrepareNextMove(Direction.Right));
-            snake.MoveHead(snake.PrepareNextMove(Direction.Right));
-            snake.MoveHead(snake.PrepareNextMove(Direction.Down));
-            snake.MoveHead(snake.PrepareNextMove(Direction.Down));
-            snake.MoveHead(snake.PrepareNextMove(Direction.Left));
-            snake.MoveHead(snake.PrepareNextMove(Direction.Down));
+            // Arrange
+            var snakeState = new SnakeState(0, 0);
+            object eventSender = null;
+            PropertyChangedEventArgs eventArgs = null;
+            snakeState.PropertyChanged += (object sender, PropertyChangedEventArgs e) => { eventSender = sender; eventArgs = e; };
 
-            int score = (int)snakeState.Score;
-
-            Assert.AreEqual(210, score);
-        }
-
-        [Test]
-        public void IsDead_WhenSetFalse_IsFalse()
-        {
-            var gameBoard = new GameBoard(10, 10);
-            var snake = new Snake(gameBoard, 0, 0, 1);
-            var snakeState = new SnakeState(snake, 1);
-
-            snakeState.IsDead = false;
-
-            Assert.IsFalse(snakeState.IsDead);
-        }
-
-        [Test]
-        public void IsDead_WhenSetTrue_IsTrue()
-        {
-            var gameBoard = new GameBoard(10, 10);
-            var snake = new Snake(gameBoard, 0, 0, 1);
-            var snakeState = new SnakeState(snake, 1);
-
+            // Act
             snakeState.IsDead = true;
 
-            Assert.IsTrue(snakeState.IsDead);
+            // Assert
+            eventSender.Should().Be(snakeState);
+            eventArgs.PropertyName.Should().Be("IsDead");
         }
 
-        [Test]
-        public void IsDead_WhenSetFalse_CallsEvent()
+        [Theory]
+        [InlineData(1, 1, 1, 0)]
+        [InlineData(1, 1, 2, 1)]
+        [InlineData(1, 2, 2, 2)]
+        [InlineData(0, 3, 1, 3)]
+        public void ScoreGetter_ReturnsProperValue(int snakeInitialLength, int scoreFactor, int snakeLength, int expScore)
         {
-            var gameBoard = new GameBoard(10, 10);
-            var snake = new Snake(gameBoard, 0, 0, 1);
-            var snakeState = new SnakeState(snake, 1);
-            object eventSender = null;
-            PropertyChangedEventArgs eventArgs = null;
-            snakeState.PropertyChanged += (object sender, PropertyChangedEventArgs e) => { eventSender = sender; eventArgs = e; };
+            // Arrange
+            var snakeState = new SnakeState(snakeInitialLength, scoreFactor)
+            {
+                SnakeLength = snakeLength
+            };
 
-            snakeState.IsDead = false;
+            // Act
+            var score = snakeState.Score;
 
-            Assert.AreSame(snakeState, eventSender);
-            Assert.AreEqual(nameof(snakeState.IsDead), eventArgs?.PropertyName);
+            // Assert
+            score.Should().Be(expScore);
         }
-
-        [Test]
-        public void IsDead_WhenSetTrue_CallsEvent()
-        {
-            var gameBoard = new GameBoard(10, 10);
-            var snake = new Snake(gameBoard, 0, 0, 1);
-            var snakeState = new SnakeState(snake, 1);
-            object eventSender = null;
-            PropertyChangedEventArgs eventArgs = null;
-            snakeState.PropertyChanged += (object sender, PropertyChangedEventArgs e) => { eventSender = sender; eventArgs = e; };
-
-            snakeState.IsDead = true;
-
-            Assert.AreSame(snakeState, eventSender);
-            Assert.AreEqual(nameof(snakeState.IsDead), eventArgs?.PropertyName);
-        }
-
-        [Test]
-        public void ScoreValueChanged_WhenCalled_EventIsRised()
-        {
-            var gameBoard = new GameBoard(10, 10);
-            var snake = new Snake(gameBoard, 0, 0, 1);
-            var snakeState = new SnakeState(snake, 1);
-            object eventSender = null;
-            PropertyChangedEventArgs eventArgs = null;
-            snakeState.PropertyChanged += (object sender, PropertyChangedEventArgs e) => { eventSender = sender; eventArgs = e; };
-
-            snakeState.ScoreValueChanged();
-
-            Assert.AreSame(snakeState, eventSender);
-            Assert.AreEqual(nameof(snakeState.Score), eventArgs?.PropertyName);
-        }*/
     }
 }

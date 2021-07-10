@@ -1,100 +1,111 @@
-﻿using NUnit.Framework;
-using System;
+﻿using System;
 using System.ComponentModel;
 using System.Threading;
 using System.Windows.Media;
 using System.Windows.Shapes;
+using Xunit;
+using FluentAssertions;
 
 namespace Game.UnitTests
 {
-    [Apartment(ApartmentState.STA)]
-    class CellTests
+    public class CellTests
     {
-        [Test]
-        public void Cell_AfterConstructorCalled_ShapeIsNull()
-        {
-            var cell = new Cell();
 
-            Assert.IsNull(cell.Shape);
-        }
-
-        [Test]
+        [StaFact]
         public void PlaceSnake_AfterCalled_ShapeIsBlackRectangle()
         {
+            // Arrange
             var cell = new Cell();
 
+            // Act
             cell.PlaceSnake();
 
-            Assert.IsInstanceOf<Rectangle>(cell.Shape);
-            Assert.AreEqual(Brushes.Black, cell.Shape.Fill);
+            // Assert
+            cell.Shape.Should().BeOfType<Rectangle>();
+            cell.Shape.Fill.Should().Be(Brushes.Black);
         }
 
-        [Test]
+        [StaFact]
         public void PlaceFeed_AfterCalled_ShapeIsRedEllipse()
         {
+            // Arrange
             var cell = new Cell();
             cell.PlaceSnake();
 
+            // Act
             cell.PlaceFood();
 
-            Assert.IsInstanceOf<Ellipse>(cell.Shape);
-            Assert.AreEqual(Brushes.Red, cell.Shape.Fill);
+            // Assert
+            cell.Shape.Should().BeOfType<Ellipse>();
+            cell.Shape.Fill.Should().Be(Brushes.Red);
         }
 
-        [Test]
+        [StaFact]
         public void Clear_AfterCalled_ShapeIsNull()
         {
+            // Arrange
             var cell = new Cell();
             cell.PlaceFood();
 
+            // Act
             cell.Clear();
 
-            Assert.IsNull(cell.Shape);
+            // Assert
+            cell.Shape.Should().BeNull();
         }
 
-        [Test]
+        [StaFact]
         public void PlaceSnake_WhenCalled_EventIsRaised()
         {
+            // Arrange
             var cell = new Cell();
             object eventSender = null;
             PropertyChangedEventArgs eventArgs = null;
             Cell.Dispatcher = new DispatcherMock();
             cell.PropertyChanged += (object sender, PropertyChangedEventArgs e) => { eventSender = sender; eventArgs = e; };
 
+            // Act
             cell.PlaceSnake();
 
-            Assert.AreSame(cell, eventSender);
-            Assert.AreEqual(nameof(cell.Shape), eventArgs?.PropertyName);
+            // Assert
+            eventSender.Should().BeSameAs(cell);
+            eventArgs?.PropertyName.Should().Be("Shape");
         }
 
-        [Test]
+        [StaFact]
         public void PlaceFeed_WhenCalled_EventIsRaised()
         {
+            // Arrange
             var cell = new Cell();
             object eventSender = null;
             PropertyChangedEventArgs eventArgs = null;
             Cell.Dispatcher = new DispatcherMock();
             cell.PropertyChanged += (object sender, PropertyChangedEventArgs e) => { eventSender = sender; eventArgs = e; };
 
+            // Act
             cell.PlaceFood();
 
-            Assert.AreSame(cell, eventSender);
-            Assert.AreEqual(nameof(cell.Shape), eventArgs?.PropertyName);
+            // Assert
+            eventSender.Should().BeSameAs(cell);
+            eventArgs?.PropertyName.Should().Be("Shape");
         }
 
-        [Test]
+        [StaFact]
         public void Clear_WhenCalled_EventIsRaised()
         {
+            // Arrange
             var cell = new Cell();
             object eventSender = null;
             PropertyChangedEventArgs eventArgs = null;
             Cell.Dispatcher = new DispatcherMock();
             cell.PropertyChanged += (object sender, PropertyChangedEventArgs e) => { eventSender = sender; eventArgs = e; };
 
+            // Act
             cell.Clear();
 
-            Assert.AreSame(cell, eventSender);
-            Assert.AreEqual(nameof(cell.Shape), eventArgs?.PropertyName);
+            // Assert
+            eventSender.Should().BeSameAs(cell);
+            eventArgs?.PropertyName.Should().Be("Shape");
         }
 
         class DispatcherMock : IDispatcher

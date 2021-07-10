@@ -1,48 +1,55 @@
-﻿using NUnit.Framework;
+﻿using Xunit;
+using FluentAssertions;
 
 namespace Game.UnitTests
 {
-    class MultiplicationConverterTests
+    public class MultiplicationConverterTests
     {
-        [Test]
-        public void Convert_WhenValueIsNotInt_ResultIs1()
+       [Fact]
+        public void Convert_WhenValueIsNotInt_Returns1()
         {
+            // Arrange
+            object value = 0.5;
+            object parameter = 0;
+            int expResult = 1;
             var multiplicationConverter = new MultiplicationConverter();
 
-            var result = multiplicationConverter.Convert(3.14, typeof(int), 3, null);
+            // Act
+            var result = multiplicationConverter.Convert(value, typeof(int), parameter, null);
 
-            Assert.AreEqual(1, result);
+            // Assert
+            result.Should().Be(expResult);
         }
 
-        [Test]
+        [Fact]
         public void Convert_WhenParameterIsNotInt_ReturnsValue()
         {
+            // Arrange
+            object value = 2;
+            object parameter = "";
             var multiplicationConverter = new MultiplicationConverter();
 
-            var result = multiplicationConverter.Convert(3, typeof(int), "", null);
+            // Act
+            var result = multiplicationConverter.Convert(value, typeof(int), parameter, null);
 
-            Assert.AreEqual(3, result);
+            // Assert
+            result.Should().Be(value);
         }
 
-        [Test]
-        public void Convert_WhenArgumentsAre3And3_ResultIs9()
+        [Fact]
+        public void Convert_WhenArgumentsAreInt_ResultMultiplicationResult()
         {
+            // Arrange
+            object value = 2;
+            object parameter = 2;
+            int expResult = 4;
             var multiplicationConverter = new MultiplicationConverter();
 
-            var result = multiplicationConverter.Convert(3, typeof(int), 3, null);
+            // Act
+            var result = multiplicationConverter.Convert(value, typeof(int), parameter, null);
 
-            Assert.AreEqual(9, result);
+            // Assert
+            result.Should().Be(expResult);
         }
-
-        [Test]
-        public void Convert_WhenArgumentsAre2And4_ResultIs8()
-        {
-            var multiplicationConverter = new MultiplicationConverter();
-
-            var result = multiplicationConverter.Convert(2, typeof(int), 4, null);
-
-            Assert.AreEqual(8, result);
-        }
-
     }
 }

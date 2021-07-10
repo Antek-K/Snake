@@ -29,8 +29,8 @@ namespace Game
         }
 
         public void PlaceSnake() => Shape = snake;
-        public void PlaceFood() => Shape = food;
-        public void Clear() => Shape = null;
+        public virtual void PlaceFood() => Shape = food;
+        public virtual void Clear() => Shape = null;
 
         private void NotifyPropertyChanged([CallerMemberName] string propertyName = "")
         {
