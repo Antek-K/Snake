@@ -4,7 +4,6 @@ using FluentAssertions;
 
 namespace Game.UnitTests
 {
-    // [Apartment(ApartmentState.STA)]
     public class SnakeStateTests
     {
         [Fact]

@@ -1,6 +1,5 @@
 ﻿using System;
 using System.ComponentModel;
-using System.Threading;
 using System.Windows.Media;
 using System.Windows.Shapes;
 using Xunit;
