@@ -1,8 +1,4 @@
-﻿using System.Linq;
-using System.Threading;
-using System.Windows.Media;
-using System.Windows.Shapes;
-using Xunit;
+﻿using Xunit;
 using FluentAssertions;
 using Moq;
 

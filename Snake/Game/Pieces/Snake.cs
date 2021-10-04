@@ -16,6 +16,8 @@ namespace Game
             this.gameBoard = gameBoard;
         }
 
+        public Snake() { }
+
         public CellLocation HeadLocation { get; set; }
 
         public int Length => snakeBodyQueue.Count;
@@ -24,7 +26,7 @@ namespace Game
 
         public void Clear()
         {
-            snakeBodyQueue.ToList().ForEach(cell => gameBoard[cell].Clear());
+            snakeBodyQueue.ToList().ForEach(cellLocation => gameBoard[cellLocation].Clear());
             snakeBodyQueue.Clear();
         }
 

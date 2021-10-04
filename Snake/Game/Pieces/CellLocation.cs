@@ -20,7 +20,7 @@ namespace Game
         public int Column { get; set; }
 
 
-        public bool Equals([AllowNull] CellLocation other) => Row == other?.Row && Column == other?.Column;
+        public virtual bool Equals([AllowNull] CellLocation other) => Row == other?.Row && Column == other?.Column;
 
         public override bool Equals(object obj) => Equals(obj as CellLocation);
 

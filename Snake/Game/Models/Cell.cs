@@ -28,7 +28,7 @@ namespace Game
             }
         }
 
-        public void PlaceSnake() => Shape = snake;
+        public virtual void PlaceSnake() => Shape = snake;
         public virtual void PlaceFood() => Shape = food;
         public virtual void Clear() => Shape = null;
 
