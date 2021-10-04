@@ -21,6 +21,7 @@ namespace Game
             this.snakeInitialLength = snakeInitialLength;
             this.scoreFactor = scoreFactor;
             SnakeLength = snakeInitialLength;
+            IsDead = true;
         }
 
         public int SnakeLength 

@@ -22,6 +22,8 @@ namespace Game
             FlatBoard = new ObservableCollection<Cell>(gameBoard.FlatBoard());
             RowCount = gameBoard.RowCount;
             ColumnCount = gameBoard.ColumnCount;
+
+            PeriodicalConditionalActionRunner.RunInNewThread(gameLogic.PerformMove, Parameters.SpeedMsPerMove, () => !SnakeState.IsDead);
         }
         
         public SnakeState SnakeState { get; }

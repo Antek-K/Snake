@@ -15,8 +15,6 @@ namespace Game
         private readonly DirectionBuffer directionBuffer;
         private readonly SnakeState snakeState;
 
-        private readonly int speedMsPerMove;
-
         public GameLogic(GameBoard gameBoard, DirectionBuffer directionBuffer, SnakeState snakeState)
         {
             this.directionBuffer = directionBuffer;
@@ -25,12 +23,6 @@ namespace Game
             var snake = new Snake(gameBoard);
             snakeMover = new SnakeMover(snake, snakeState, gameBoard.RowCount, gameBoard.ColumnCount, Parameters.SnakeInitialRow, Parameters.SnakeInitialColumn, Parameters.SnakeInitialLength);
             food = new Food(gameBoard, snake);
-            
-            speedMsPerMove = Parameters.SpeedMsPerMove;
-
-            snakeState.IsDead = true;
-
-            Task.Run(() => KeepMoving());
         }
 
         public void Start()
@@ -44,19 +36,7 @@ namespace Game
             snakeState.IsDead = false;
         }
 
-        private void KeepMoving()
-        {
-            while (true)
-            {
-                if (!snakeState.IsDead)
-                {
-                    PerformMove();
-                }
-                Thread.Sleep(speedMsPerMove);
-            }
-        }
-
-        private void PerformMove()
+        public void PerformMove()
         {
             snakeMover.PrepareNextMove(directionBuffer.GetNextDirection());
             snakeState.IsDead = snakeMover.IsSnakeDying();
