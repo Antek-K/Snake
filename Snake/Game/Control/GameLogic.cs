@@ -1,6 +1,4 @@
-﻿using System.Threading;
-using System.Threading.Tasks;
-
+﻿
 namespace Game
 {
     /// <summary>
@@ -8,12 +6,12 @@ namespace Game
     /// Contects parts of the application.
     /// Contains main loop of the game.
     /// </summary>
-    class GameLogic
+    public class GameLogic
     {
-        private readonly SnakeMover snakeMover;
         private readonly Food food;
         private readonly DirectionBuffer directionBuffer;
         private readonly SnakeState snakeState;
+        private readonly SnakeMover snakeMover;
 
         public GameLogic(GameBoard gameBoard, DirectionBuffer directionBuffer, SnakeState snakeState)
         {
@@ -23,6 +21,14 @@ namespace Game
             var snake = new Snake(gameBoard);
             snakeMover = new SnakeMover(snake, snakeState, gameBoard.RowCount, gameBoard.ColumnCount, Parameters.SnakeInitialRow, Parameters.SnakeInitialColumn, Parameters.SnakeInitialLength);
             food = new Food(gameBoard, snake);
+        }
+
+        public GameLogic(GameBoard gameBoard, DirectionBuffer directionBuffer, SnakeState snakeState, SnakeMover snakeMover, Food food)
+        {
+            this.directionBuffer = directionBuffer;
+            this.snakeState = snakeState;
+            this.snakeMover = snakeMover;
+            this.food = food;
         }
 
         public void Start()

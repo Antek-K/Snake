@@ -2,7 +2,7 @@
 using FluentAssertions;
 using Moq;
 
-namespace Game.UnitTests.Control
+namespace Game.UnitTests
 {
     public class SnakeMoverTests
     {

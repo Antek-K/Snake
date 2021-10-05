@@ -18,6 +18,8 @@ namespace Game
             this.initialDirection = initialDirection;
         }
 
+        public DirectionBuffer() { }
+
         public void AddDirectionToBuffer(Direction direction)
         {
             if(IsDirectionAcceptable(lastDirection, direction))
@@ -36,7 +38,7 @@ namespace Game
             return lastDirection;
         }
 
-        public void Initialize()
+        public virtual void Initialize()
         {
             directionQueue.Clear();
             lastDirection = initialDirection;

@@ -28,7 +28,9 @@
             this.snakeInitialLength = snakeInitialLength;
         }
 
-        public void Initialize(Direction direction)
+        public SnakeMover() { }
+
+        public virtual void Initialize(Direction direction)
         {
             snake.Clear();
 
@@ -41,7 +43,7 @@
             }
         }
 
-        public CellLocation PrepareNextMove(Direction direction)
+        public virtual CellLocation PrepareNextMove(Direction direction)
         {
             var row = snake.HeadLocation.Row;
             var column = snake.HeadLocation.Column;
@@ -64,17 +66,17 @@
             return nextHeadLocation = new CellLocation(row, column);
         }
 
-        public bool IsSnakeDying() => snake.IsLocationOnSnake(nextHeadLocation);
+        public virtual bool IsSnakeDying() => snake.IsLocationOnSnake(nextHeadLocation);
 
-        public bool IsSnakeEating(CellLocation food) => food.Equals(nextHeadLocation);
+        public virtual bool IsSnakeEating(CellLocation food) => food.Equals(nextHeadLocation);
 
-        public void Move()
+        public virtual void Move()
         {
             snake.MoveHead(nextHeadLocation);
             snake.MoveTail();
         }
 
-        public void ExtendAndMove()
+        public virtual void ExtendAndMove()
         {
             snake.MoveHead(nextHeadLocation);
             snakeState.SnakeLength = snake.Length;

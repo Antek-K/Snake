@@ -38,7 +38,7 @@ namespace Game
 
         public object Score => (SnakeLength - snakeInitialLength) * scoreFactor;
 
-        public bool IsDead
+        public virtual bool IsDead
         {
             get => isDead;
             set

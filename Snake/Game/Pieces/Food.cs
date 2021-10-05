@@ -19,13 +19,15 @@ namespace Game
             PlaceFoodRandomlyNotAtSnake();
         }
 
+        public Food() { }
+
         public CellLocation FoodLocation { get; } = new CellLocation();
 
         public void Show() => gameBoard[FoodLocation].PlaceFood();
 
-        public void Hide() => gameBoard[FoodLocation].Clear();
+        public virtual void Hide() => gameBoard[FoodLocation].Clear();
 
-        public void PlaceFoodRandomlyNotAtSnake()
+        public virtual void PlaceFoodRandomlyNotAtSnake()
         {
             do
             {
