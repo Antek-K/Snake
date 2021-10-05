@@ -41,7 +41,7 @@
             }
         }
 
-        public void PrepareNextMove(Direction direction)
+        public CellLocation PrepareNextMove(Direction direction)
         {
             var row = snake.HeadLocation.Row;
             var column = snake.HeadLocation.Column;
@@ -61,7 +61,7 @@
                     column = SumModulo(column, 1, gameBoardColumnCount);
                     break;
             }
-            nextHeadLocation = new CellLocation(row, column);
+            return nextHeadLocation = new CellLocation(row, column);
         }
 
         public bool IsSnakeDying() => snake.IsLocationOnSnake(nextHeadLocation);

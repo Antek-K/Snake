@@ -24,7 +24,9 @@ namespace Game
             IsDead = true;
         }
 
-        public int SnakeLength 
+        public SnakeState() { }
+
+        public virtual int SnakeLength 
         { 
             get => snakeLength;
             set

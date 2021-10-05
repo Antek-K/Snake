@@ -18,26 +18,26 @@ namespace Game
 
         public Snake() { }
 
-        public CellLocation HeadLocation { get; set; }
+        public virtual CellLocation HeadLocation { get; set; }
 
-        public int Length => snakeBodyQueue.Count;
+        public virtual int Length => snakeBodyQueue.Count;
 
         public virtual bool IsLocationOnSnake(CellLocation cellLocation) => snakeBodyQueue.Contains(cellLocation);
 
-        public void Clear()
+        public virtual void Clear()
         {
             snakeBodyQueue.ToList().ForEach(cellLocation => gameBoard[cellLocation].Clear());
             snakeBodyQueue.Clear();
         }
 
-        public void MoveHead(CellLocation nextHeadLocation)
+        public virtual void MoveHead(CellLocation nextHeadLocation)
         {
             HeadLocation = nextHeadLocation;
             snakeBodyQueue.Enqueue(HeadLocation);
             gameBoard[HeadLocation].PlaceSnake();
         }
 
-        public void MoveTail()
+        public virtual void MoveTail()
         {
             var tail = snakeBodyQueue.Dequeue();
             gameBoard[tail].Clear();

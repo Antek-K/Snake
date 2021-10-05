@@ -16,8 +16,8 @@ namespace Game
 
         public CellLocation() { }
 
-        public int Row { get; set; }
-        public int Column { get; set; }
+        public virtual int Row { get; set; }
+        public virtual int Column { get; set; }
 
 
         public virtual bool Equals([AllowNull] CellLocation other) => Row == other?.Row && Column == other?.Column;
